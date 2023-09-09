@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
-    tittle: {
+    title: {
         type: String,
         required: [true, "please Enter Task name"]
     },
@@ -12,8 +12,11 @@ const taskSchema = new mongoose.Schema({
         type: String,
         default: "todo"
     },
+    createDate:{
+        type:Date
+    },
     dueDate: {
-        type: Date,
+        type:Date,
         require: true
     },
     user: {
