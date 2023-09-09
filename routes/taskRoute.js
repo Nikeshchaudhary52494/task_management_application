@@ -1,4 +1,6 @@
 const express = require("express");
+
+const { isAuthenticatedUser } = require("../middleware/auth")
 const {
     createTask,
     getALlTasks,
@@ -10,8 +12,8 @@ const {
 const router = express.Router();
 
 
-router.route("/task/new").post(createTask);
-router.route("/tasks").get(getALlTasks);
-router.route("/task/:id").get(getOneTask).delete(deleteTask).put(updateTask);
-// router.route()
+router.route("/task/new").post(isAuthenticatedUser, createTask);
+router.route("/tasks").get(isAuthenticatedUser, getALlTasks);
+router.route("/task/:id").get(isAuthenticatedUser, getOneTask).delete(isAuthenticatedUser, deleteTask).put(isAuthenticatedUser, updateTask);
+
 module.exports = router;

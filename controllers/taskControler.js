@@ -1,9 +1,21 @@
-const Task = require("../models/taskSchema")
+const Task = require("../models/taskModel")
 const catchAsyncErrors = require("../middleware/catchAsyncError");
 
 // create task
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
-    const task = await Task.create(req.body);
+    const {
+        tittle,
+        description,
+        status,
+
+    } = req.body;
+
+    const task = await Task.create({
+        tittle,
+        description,
+        status,
+        user:req.user._id,
+    });
     res.status(201).json({
         success: true,
         task,
@@ -12,8 +24,8 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
 
 // Get All tasks
 exports.getALlTasks = catchAsyncErrors(async (req, res) => {
-    const tasksCount = await Task.countDocuments();
-    const tasks = await Task.find();
+    const tasksCount = await Task.countDocuments({user:req.user._id});
+    const tasks = await Task.find({user:req.user._id});
     res.status(200).json({
         success: true,
         tasks,
@@ -62,7 +74,7 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
         })
     }
 
-    task2 = await Task.findByIdAndUpdate(req.params.id, req.body, {
+    task = await Task.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
@@ -72,6 +84,6 @@ exports.updateTask = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Task updated Sucessfully",
-        task2
+        task
     });
 })
